@@ -18,7 +18,7 @@ struct ll_int
 typedef struct ll_int *ll_int;
 
 // FUNÇÃO PARA PRINTAR A NOSSA LISTA
-//  Essa função recebe uma lista como parâmetro
+// Essa função recebe uma lista como parâmetro
 void print_list(ll_int lista)
 {
   struct ll_int_node *current = lista->first; // Criamos um ponteiro que incialmente aponta para o primeiro nó da lista
@@ -56,6 +56,47 @@ void insert_beginning(ll_int lista, int value)
   {
     printf("Erro ao alocar memória!\n"); // Se a alocação de memória deu erro retorna o erro
   }
+}
+
+// FUNÇÃO PARA INSERIR NO FIM DA LISTA
+void insert_end(ll_int lista, int value)
+{
+  struct ll_int_node *new_node;                                        // Cria um ponteiro para o novo nó
+  new_node = (struct ll_int_node *)malloc(sizeof(struct ll_int_node)); // Aloca dinamicamente memória para o novo nó e retorna um ponteiro para ele.
+
+  if (new_node) // Verifica se a alocação de memória foi bem sucedida
+  {
+    new_node->value = value; // Armazena o valor no novo nó da lista
+    new_node->next = 0;      // Ponteiro do novo nó aponta para o 0
+    if (lista->first == 0)   // Se a lista era vazia então...
+    {
+      lista->first = new_node; // Entao o nosso novo nó também é o primeiro elemento da lista
+    }
+    else
+    {
+      lista->last->next = new_node; // Se a lista nao era vazia faremos com que o antigo ultimo aponte para o novo ultimo
+    }
+    lista->last = new_node; // Atualizamos o ultimo valor da lista como sendo o nosso novo valor ultimo
+  }
+  else
+  {
+    printf("Erro ao alocar memória dinamicamento\n");
+  }
+}
+
+// FUNÇÃO PARA REMOVER UM NÓ DO INÍCIO DA LISTA
+// Essa função recebe como parametro um lista
+int remove_first(ll_int lista)
+{
+  if (lista->first == 0) // Verifica se a lista é vazia
+  {
+    return -1; // Se for vazia retorna -1
+  }
+  int primeiroValor = lista->first->value;     // Armazena o valor do primeiro no da lista em primeiroValor
+  struct ll_int_node *old_node = lista->first; // Cria um ponte para o primeiro nó da lista a ser removido
+  lista->first = lista->first->next;           // Defino o primeiro nó da lista como o proximo em relação ao primeiro que será removido
+  free(old_node);                              // Liberamos a memória do antigo primeiro elemento da lista
+  return primeiroValor;                        // Retornamos o valor excluído
 }
 
 // FUNÇÃO PARA REMOVER UM NÓ DO FIM DA LISTA
@@ -97,6 +138,7 @@ int main()
   insert_beginning(lista1, 11);
   insert_beginning(lista1, 10);
   remove_last(lista1);
+  remove_first(lista1);
   print_list(lista1);
   return 0;
 }
